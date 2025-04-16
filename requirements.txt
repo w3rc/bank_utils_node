@@ -1,0 +1,15 @@
+aiofiles
+aiohttp
+boto3
+httpx
+python-dotenv
+GitPython
+botocore
+pillow
+pillow-avif-plugin
+pillow-heif
+numpy
+PyPDF2
+opencv-python
+soundfile
+mutagen
