@@ -1,3 +1,5 @@
+from .nodes.balance import FetchBankBalance, TransferBalance
+
 NODE_CLASS_MAPPINGS = {
     "FetchBankBalance": FetchBankBalance,
     "TransferBalance": TransferBalance
