@@ -22,7 +22,7 @@ class TransferBalance:
             "required": {
                 "target_user_id": ("STRING", {"forceInput": True}),
                 "source_user_id": ("STRING", {"forceInput": True}),
-                "amount": ("INT", {"forceInput": True})
+                "amount": ("STRING", {"forceInput": True})
             }
         }
 
@@ -31,5 +31,9 @@ class TransferBalance:
     FUNCTION = "transfer_bank_balance"
 
     def transfer_bank_balance(self, target_user_id, source_user_id, amount):
-        response = f"${amount} transferred from {source_user_id} to {target_user_id}"
-        return response
+        try:
+            amount_int = int(amount)
+            response = f"${amount_int} transferred from {source_user_id} to {target_user_id}"
+            return response
+        except ValueError:
+            return "Invalid amount"
