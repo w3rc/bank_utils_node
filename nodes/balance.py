@@ -12,7 +12,7 @@ class FetchBankBalance:
     FUNCTION = "fetch_bank_balance"
 
     def fetch_bank_balance(self, user_id):
-        return str(99999)
+        return str(int(99999))
 
 
 class TransferBalance:
