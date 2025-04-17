@@ -7,8 +7,8 @@ class FetchBankBalance:
             }
         }
 
-    RETURN_TYPES = ("STRING")
-    RETURN_NAMES = ("balance")
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("balance",)
     FUNCTION = "fetch_bank_balance"
 
     def fetch_bank_balance(self, user_id):
@@ -26,8 +26,8 @@ class TransferBalance:
             }
         }
 
-    RETURN_TYPES = ("STRING")
-    RETURN_NAMES = ("status")
+    RETURN_TYPES = ("STRING",)  
+    RETURN_NAMES = ("status",)
     FUNCTION = "transfer_bank_balance"
 
     def transfer_bank_balance(self, target_user_id, source_user_id, amount):
