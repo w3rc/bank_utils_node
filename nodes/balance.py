@@ -1,4 +1,7 @@
 class FetchBankBalance:
+    def __init__(self):
+        self.balance = 0
+
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -11,8 +14,15 @@ class FetchBankBalance:
     RETURN_NAMES = ("balance",)
     FUNCTION = "fetch_bank_balance"
 
+
+    def get_balance(self, user_id):
+        # Simulate fetching balance from a database or API
+        # For the sake of this example, we'll just return a fixed value
+        return 99898
+
     def fetch_bank_balance(self, user_id):
-        return str(int(99999))
+        balance = self.get_balance(user_id)
+        return (str(balance),)
 
 
 class TransferBalance:
@@ -34,6 +44,9 @@ class TransferBalance:
         try:
             amount_int = int(amount)
             response = f"${amount_int} transferred from {source_user_id} to {target_user_id}"
-            return response
+            print(response)
+            return (response,)  # Return as a tuple
         except ValueError:
-            return "Invalid amount"
+            raise ValueError("Amount must be an integer.")
+        except Exception as e:
+            raise Exception(f"An error occurred during transfer: {str(e)}")
