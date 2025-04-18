@@ -83,6 +83,9 @@ class FindUsersFromNamePartial:
     def find_users_from_name_partial(self, name_partial):
         users = accounts_collection.find({"name": {"$regex": name_partial}})
         users = [{"id": user["user_id"], "name": user["name"]} for user in users]
+        if len(users) == 0:
+            return ("No users found",)
+
         formatted_users = [f"{user['name']} ({user['id']})" for user in users]
         # Convert list to string with commas between users
         users_string = ",".join(formatted_users)
@@ -100,6 +103,9 @@ class FindAllUsers:
     def find_all_users(self):
         users = accounts_collection.find({})
         users = [{"id": user["user_id"], "name": user["name"]} for user in users]
+        if len(users) == 0:
+            return ("No users found",)
+        
         formatted_users = [f"{user['name']} ({user['id']})" for user in users]
         users_string = ",".join(formatted_users)
         return (users_string,)
@@ -123,8 +129,13 @@ class TransferBalance:
         try:
             amount_int = int(amount)
             source = accounts_collection.find_one({"user_id": source_user_id})
-            if not source or source.get("balance", 0) < amount_int:
+            if not source:
+                return ("Source user not found",)
+            if source.get("balance", 0) < amount_int:
                 return ("Insufficient funds",)
+            target = accounts_collection.find_one({"user_id": target_user_id})
+            if not target:
+                return ("Target user not found",)
             # perform transfer
             accounts_collection.update_one({"user_id": source_user_id}, {"$inc": {"balance": -amount_int}})
             accounts_collection.update_one({"user_id": target_user_id}, {"$inc": {"balance": amount_int}}, upsert=True)
