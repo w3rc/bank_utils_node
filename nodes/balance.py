@@ -132,6 +132,13 @@ class TransferBalance:
             if not source:
                 return ("Source user not found",)
             if source.get("balance", 0) < amount_int:
+                transactions_collection.insert_one({
+                    "status": "failed",
+                    "source_user_id": source_user_id,
+                    "target_user_id": target_user_id,
+                    "reason": "Insufficient funds",
+                    "amount": amount_int
+                })
                 return ("Insufficient funds",)
             target = accounts_collection.find_one({"user_id": target_user_id})
             if not target:
@@ -142,6 +149,7 @@ class TransferBalance:
             
             # log transaction
             transactions_collection.insert_one({
+                "status": "completed",
                 "source_user_id": source_user_id,
                 "target_user_id": target_user_id,
                 "amount": amount_int
