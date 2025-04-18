@@ -76,28 +76,33 @@ class FindUsersFromNamePartial:
             }
         }
 
-    RETURN_TYPES = ("LIST",)
-    RETURN_NAMES = ("user_ids",)
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("users",)
     FUNCTION = "find_users_from_name_partial"
 
     def find_users_from_name_partial(self, name_partial):
         users = accounts_collection.find({"user_id": {"$regex": name_partial}})
-        user_ids = [user["user_id"] for user in users]
-        return (user_ids,)
+        users = [{"id": user["user_id"], "name": user["name"]} for user in users]
+        formatted_users = [f"{user['name']} ({user['id']})" for user in users]
+        # Convert list to string with commas between users
+        users_string = ",".join(formatted_users)
+        return (users_string,)
     
 class FindAllUsers:
     @classmethod
     def INPUT_TYPES(cls):
         return {}
 
-    RETURN_TYPES = ("LIST",)
-    RETURN_NAMES = ("user_ids",)
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("users",)
     FUNCTION = "find_all_users"
 
     def find_all_users(self):
         users = accounts_collection.find({})
-        user_ids = [user["user_id"] for user in users]
-        return (user_ids,)
+        users = [{"id": user["user_id"], "name": user["name"]} for user in users]
+        formatted_users = [f"{user['name']} ({user['id']})" for user in users]
+        users_string = ",".join(formatted_users)
+        return (users_string,)
 
 class TransferBalance:
     @classmethod
