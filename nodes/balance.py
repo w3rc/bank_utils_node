@@ -81,7 +81,8 @@ class FindUsersFromNamePartial:
     FUNCTION = "find_users_from_name_partial"
 
     def find_users_from_name_partial(self, name_partial):
-        users = accounts_collection.find({"name": {"$regex": name_partial}})
+        # Use the 'i' option to make the regex search case-insensitive
+        users = accounts_collection.find({"name": {"$regex": name_partial, "$options": "i"}})
         users = [{"id": user["user_id"], "name": user["name"]} for user in users]
         if len(users) == 0:
             return ("No users found",)
