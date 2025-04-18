@@ -11,7 +11,7 @@ if not MONGO_URI:
     print("ERROR: MONGO_URI environment variable is not set or empty")
     print("Please ensure you have set MONGO_URI in your .env file")
 else:
-    print(f"MongoDB URI: {MONGO_URI[:10]}... (partial for security)")
+    print(f"MongoDB URI: {MONGO_URI}")
 
 MONGO_DB_NAME = os.environ.get("MONGO_DB_NAME", "bank-db")
 
@@ -24,7 +24,7 @@ try:
     print(f"Successfully connected to MongoDB database: {MONGO_DB_NAME}")
 except Exception as e:
     print(f"MongoDB connection error: {e}")
-    print(f"MONGO_URI value format: {MONGO_URI[:10]}... (partial for security)")
+    print(f"MONGO_URI value format: {MONGO_URI}... (partial for security)")
     # Initialize with None to handle gracefully in code
     client = None
     db = None
