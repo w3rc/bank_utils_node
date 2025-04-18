@@ -1,11 +1,35 @@
 import os
 from pymongo import MongoClient
 
-MONGO_URI = os.environ.get("MONGO_URI")
-MONGO_DB_NAME = os.environ.get("MONGO_DB_NAME")
+# Get MongoDB URI from environment and ensure it has the proper format
+MONGO_URI = os.environ.get("MONGO_URI", "")
+if MONGO_URI and not (MONGO_URI.startswith("mongodb://") or MONGO_URI.startswith("mongodb+srv://")):
+    MONGO_URI = f"mongodb://{MONGO_URI}"
+    
+# If MONGO_URI is still empty, provide a fallback or raise a more descriptive error
+if not MONGO_URI:
+    print("ERROR: MONGO_URI environment variable is not set or empty")
+    print("Please ensure you have set MONGO_URI in your .env file")
+else:
+    print(f"MongoDB URI: {MONGO_URI[:10]}... (partial for security)")
 
-client = MongoClient(MONGO_URI)
-db = client[MONGO_DB_NAME]
+MONGO_DB_NAME = os.environ.get("MONGO_DB_NAME", "bank-db")
+
+# Connect to MongoDB with error handling
+try:
+    client = MongoClient(MONGO_URI)
+    db = client[MONGO_DB_NAME]
+    # Test connection
+    client.server_info()  # This will raise an exception if connection fails
+    print(f"Successfully connected to MongoDB database: {MONGO_DB_NAME}")
+except Exception as e:
+    print(f"MongoDB connection error: {e}")
+    print(f"MONGO_URI value format: {MONGO_URI[:10]}... (partial for security)")
+    # Initialize with None to handle gracefully in code
+    client = None
+    db = None
+    print("Database connection failed. Please check your MongoDB URI and database name.")
+    
 accounts_collection = db["accounts"]
 transactions_collection = db["transactions"]
 
