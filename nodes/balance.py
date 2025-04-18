@@ -1,5 +1,5 @@
 import os
-from pymongo import MongoClient, ReturnDocument
+from pymongo import MongoClient
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -9,7 +9,7 @@ MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "bank_db")
 client = MongoClient(MONGO_URI)
 db = client[MONGO_DB_NAME]
 accounts_collection = db["accounts"]
-
+transactions_collection = db["transactions"]
 
 class FetchBankBalance:
     def __init__(self):
@@ -58,6 +58,20 @@ class FindUsersFromNamePartial:
         users = accounts_collection.find({"user_id": {"$regex": name_partial}})
         user_ids = [user["user_id"] for user in users]
         return (user_ids,)
+    
+class FindAllUsers:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {}
+
+    RETURN_TYPES = ("LIST",)
+    RETURN_NAMES = ("user_ids",)
+    FUNCTION = "find_all_users"
+
+    def find_all_users(self):
+        users = accounts_collection.find({})
+        user_ids = [user["user_id"] for user in users]
+        return (user_ids,)
 
 class TransferBalance:
     @classmethod
@@ -83,6 +97,14 @@ class TransferBalance:
             # perform transfer
             accounts_collection.update_one({"user_id": source_user_id}, {"$inc": {"balance": -amount_int}})
             accounts_collection.update_one({"user_id": target_user_id}, {"$inc": {"balance": amount_int}}, upsert=True)
+            
+            # log transaction
+            transactions_collection.insert_one({
+                "source_user_id": source_user_id,
+                "target_user_id": target_user_id,
+                "amount": amount_int
+            })
+
             response = f"${amount_int} transferred from {source_user_id} to {target_user_id}"
             return (response,)
         except ValueError:
