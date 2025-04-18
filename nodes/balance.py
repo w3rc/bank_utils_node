@@ -29,9 +29,13 @@ except Exception as e:
     client = None
     db = None
     print("Database connection failed. Please check your MongoDB URI and database name.")
-    
-accounts_collection = db["accounts"]
-transactions_collection = db["transactions"]
+
+# Define collections only if database connection is successful
+if db is not None:
+    accounts_collection = db["accounts"]
+    transactions_collection = db["transactions"]
+else:
+    print("Database connection is not established. Collections will not be defined.")
 
 class FetchBankBalance:
     def __init__(self):
