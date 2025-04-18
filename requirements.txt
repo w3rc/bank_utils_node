@@ -13,3 +13,4 @@ PyPDF2
 opencv-python
 soundfile
 mutagen
+pymongo
