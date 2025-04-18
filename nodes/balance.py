@@ -81,7 +81,7 @@ class FindUsersFromNamePartial:
     FUNCTION = "find_users_from_name_partial"
 
     def find_users_from_name_partial(self, name_partial):
-        users = accounts_collection.find({"user_id": {"$regex": name_partial}})
+        users = accounts_collection.find({"name": {"$regex": name_partial}})
         users = [{"id": user["user_id"], "name": user["name"]} for user in users]
         formatted_users = [f"{user['name']} ({user['id']})" for user in users]
         # Convert list to string with commas between users
