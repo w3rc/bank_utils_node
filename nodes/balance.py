@@ -154,7 +154,7 @@ class TransferBalance:
                 "amount": amount_int
             })
 
-            response = f"${source.get("currency")} ${amount_int} transferred from {source_user_id} to {target_user_id}"
+            response = f"${source.get('currency')} ${amount_int} transferred from {source_user_id} to {target_user_id}"
             return (response,)
         except ValueError:
             return ("Invalid amount",)
