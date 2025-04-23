@@ -56,12 +56,11 @@ class FetchBankBalance:
 
     def get_balance(self, user_id):
         if not user_id:
-            return 0
+            return "User ID is missing",
         user = accounts_collection.find_one({"user_id": user_id})
         if not user:
-            accounts_collection.insert_one({"user_id": user_id, "balance": 0})
-            return 0
-        return user.get("balance", 0)
+            return "User not found"
+        return user.get("currency", "AED") + " " + user.get("balance", 0)
 
     def fetch_bank_balance(self, user_id):
         balance = self.get_balance(user_id)
@@ -81,7 +80,6 @@ class FindUsersFromNamePartial:
     FUNCTION = "find_users_from_name_partial"
 
     def find_users_from_name_partial(self, name_partial):
-        # Use the 'i' option to make the regex search case-insensitive
         users = accounts_collection.find({"name": {"$regex": name_partial, "$options": "i"}})
         users = [{"id": user["user_id"], "name": user["name"]} for user in users]
         if len(users) == 0:
@@ -156,7 +154,7 @@ class TransferBalance:
                 "amount": amount_int
             })
 
-            response = f"${amount_int} transferred from {source_user_id} to {target_user_id}"
+            response = f"${source.get("currency")} ${amount_int} transferred from {source_user_id} to {target_user_id}"
             return (response,)
         except ValueError:
             return ("Invalid amount",)
