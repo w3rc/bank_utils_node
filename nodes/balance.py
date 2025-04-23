@@ -60,7 +60,7 @@ class FetchBankBalance:
         user = accounts_collection.find_one({"user_id": user_id})
         if not user:
             return "User not found"
-        return user.get("currency", "AED") + " " + user.get("balance", 0)
+        return f"{user.get('currency', 'AED')} {str(user.get('balance', 0))}"
 
     def fetch_bank_balance(self, user_id):
         balance = self.get_balance(user_id)
