@@ -85,7 +85,7 @@ class FindUsersFromNamePartial:
         if len(users) == 0:
             return ("No users found",)
 
-        formatted_users = [f"{user['name']} ({user['id']})" for user in users]
+        formatted_users = [f"{user['name']} (User ID: {user['id']})" for user in users]
         # Convert list to string with commas between users
         users_string = ",".join(formatted_users)
         return (users_string,)
@@ -105,7 +105,7 @@ class FindAllUsers:
         if len(users) == 0:
             return ("No users found",)
         
-        formatted_users = [f"{user['name']} ({user['id']})" for user in users]
+        formatted_users = [f"{user['name']} (User ID: {user['id']})" for user in users]
         users_string = ",".join(formatted_users)
         return (users_string,)
 
